@@ -32,7 +32,7 @@ def select_roi(image_orig, image_bin):
     for contour in contours: 
         x,y,w,h = cv2.boundingRect(contour)
         area = cv2.contourArea(contour)
-        if area > 10 and h < 20 and h > 4 and w > 4:
+        if area > 20 and h < 20 and h > 4 and w > 4:
             region = image_bin[y:y+h+1,x:x+w+1]
             regions_array.append([resize_region(region), (x,y,w,h)])       
             cv2.rectangle(image_orig,(x,y),(x+w,y+h),(0,255,0),2)
@@ -69,7 +69,7 @@ def convert_output(alphabet):
 def create_ann():
     ann = Sequential()
     ann.add(Dense(128, input_dim=784, activation='sigmoid'))
-    ann.add(Dense(53, activation='sigmoid'))
+    ann.add(Dense(52, activation='sigmoid'))
     return ann
 
 def train_ann(ann, X_train, y_train):
@@ -80,7 +80,7 @@ def train_ann(ann, X_train, y_train):
     sgd = SGD(lr=0.01, momentum=0.9)
     ann.compile(loss='mean_squared_error', optimizer=sgd)
 
-    ann.fit(X_train, y_train, epochs=2000, batch_size=1, verbose = 0, shuffle=False) 
+    ann.fit(X_train, y_train, epochs=10000, batch_size=1, verbose = 0, shuffle=False) 
  
     return ann
 
@@ -94,10 +94,13 @@ def display_result(outputs, alphabet):
     for output in outputs:
         result.append(alphabet[winner(output)])
     return result
+'''
+alphabet = ['a','a','a','a','a','b','b','b','b','b','c','c','c','c','c','d','d','d','d','d','e','e','e','e','e','f','f','f','f','f','g','g','g','g','g','h','h','h','h','h','i','i','i','i','i','j','j','j','j','j','k','k','k','k','k','l','l','l','l','l','m','m','m','m','m','n','n','n','n','n','o','o','o','o','o','p','p','p','p','p','q','q','q','q','q','r','r','r','r','r','s','s','s','s','s','t','t','t','t','t','u','u','u','u','u','v','v','v','v','v','x','x','x','x','x','y','y','y','y','y','z','z','z','z','z','A','A','A','A','A','B','B','B','B','B','C','C','C','C','C','D','D','D','D','D','E','E','E','E','E','F','F','F','F','F','G','G','G','G','G','H','H','H','H','H','I','I','I','I','I','J','J','J','J','J','K','K','K','K','K','L','L','L','L','L','M','M','M','M','M','N','N','N','N','N','O','O','O','O','O','P','P','P','P','P','Q','Q','Q','Q','R','R','R','R','S','S','S','S','S','T','T','T','T','T','U','U','U','U','U','V','V','V','V','V','W','W','W','W','W','X','X','X','X','X','Y','Y','Y','Y','Y','Z','Z','Z','Z','Z','w','w','w','w','w']
+'''
 
-alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
-img = load_image('C:/Users/Boris/Desktop/Mekani/Projekat/images/uci.jpg')
+img = load_image('C:/Users/Boris/Desktop/Mekani/Projekat/images/uci5.jpg')
 test = image_bin(image_gray(img))
 img_roi, sorted_regions = select_roi(img.copy(),test)
 plt.imshow(img_roi)
